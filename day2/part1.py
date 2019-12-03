@@ -1,6 +1,6 @@
 
 with open('adventofcode2019/day2/input') as f:
-	program = [int(x) for x in f.readline().split(',')]
+    program = [int(x) for x in f.readline().split(',')]
 
 index = 0
 while program[index] != 99:
