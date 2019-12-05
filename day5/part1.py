@@ -1,16 +1,19 @@
 import opcodes as o
 
 
-with open('../day2/input') as f:
+with open('input') as f:
+#with open('testneg') as f:
     program = [int(x) for x in f.readline().split(',')]
 
-#inp = 1
+inp = 1
 
 #Can we assume that input is only once???
-#index = o.op03(program, program[1], inp)
-index = 0
-program[1] = 12
-program[2] = 2
+if program[0] == 3:
+    index = o.op03(program, program[1], inp)
+else:
+    index = 0
+# program[1] = 12
+# program[2] = 2
 while program[index] != 99:
     instruction = str(program[index]).zfill(5)
 
@@ -23,15 +26,19 @@ while program[index] != 99:
     mode3 = int(instruction[-5])
     #position mode 0 address at index X
     #immediate mode 1 value at index X
-    if not mode1:
+    if mode1:
         param1 = program[index+1]
-    if not mode2:
+    else:
+        param1 = program[program[index+1]]
+    if mode2:
         param2 = program[index+2]
-    if not mode3:
-        param3 = program[index+3]
+    else:
+        param2 = program[program[index+2] % len(program)]
+    param3 = program[index+3]
+
 
 
     index += getattr(o, 'op' + opcode)(program, param1, param2, param3)
 
 
-print(program[0])
+print('position 0', program[0])
