@@ -7,13 +7,12 @@ with open('input') as f:
 
 inp = 1
 
-#Can we assume that input is only once???
+#Only input once
 if program[0] == 3:
-    index = o.op03(program, program[1], inp)
+    index = o.op03(program, 0, program[1], inp)
 else:
     index = 0
-# program[1] = 12
-# program[2] = 2
+
 while program[index] != 99:
     instruction = str(program[index]).zfill(5)
 
@@ -23,9 +22,8 @@ while program[index] != 99:
         break
     mode1 = int(instruction[-3])
     mode2 = int(instruction[-4])
-    mode3 = int(instruction[-5])
-    #position mode 0 address at index X
-    #immediate mode 1 value at index X
+    #Never used mode for param 3
+    #mode3 = int(instruction[-5])
     if mode1:
         param1 = program[index+1]
     else:
@@ -38,7 +36,7 @@ while program[index] != 99:
 
 
 
-    index += getattr(o, 'op' + opcode)(program, param1, param2, param3)
+    index = getattr(o, 'op' + opcode)(program, index, param1, param2, param3)
 
 
-print('position 0', program[0])
+print('position 0:', program[0])
