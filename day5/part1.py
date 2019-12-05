@@ -2,7 +2,6 @@ import opcodes as o
 
 
 with open('input') as f:
-#with open('testneg') as f:
     program = [int(x) for x in f.readline().split(',')]
 
 inp = 1

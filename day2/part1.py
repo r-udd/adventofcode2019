@@ -1,6 +1,9 @@
 
-with open('adventofcode2019/day2/input') as f:
+with open('input') as f:
     program = [int(x) for x in f.readline().split(',')]
+
+program[1] = 12
+program[2] = 2
 
 index = 0
 while program[index] != 99:
