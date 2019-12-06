@@ -4,7 +4,7 @@ import opcodes as o
 with open('input') as f:
     program = [int(x) for x in f.readline().split(',')]
 
-inp = 1
+inp = 5
 
 #Only input once
 if program[0] == 3:
@@ -16,9 +16,6 @@ while program[index] != 99:
     instruction = str(program[index]).zfill(5)
 
     opcode = instruction [-2:]
-    if opcode == '03':
-        print('Didnt work')
-        break
     mode1 = int(instruction[-3])
     mode2 = int(instruction[-4])
     #Never used mode for param 3
@@ -32,8 +29,6 @@ while program[index] != 99:
     else:
         param2 = program[program[index+2] % len(program)]
     param3 = program[index+3]
-
-
 
     index = getattr(o, 'op' + opcode)(program, index, param1, param2, param3)
 
