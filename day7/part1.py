@@ -14,8 +14,6 @@ def runamp (phase, invalue):
         opcode = instruction [-2:]
         mode1 = int(instruction[-3])
         mode2 = int(instruction[-4])
-        #Never used mode for param 3
-        #mode3 = int(instruction[-5])
         if mode1:
             param1 = program[index+1]
         else:
@@ -29,7 +27,7 @@ def runamp (phase, invalue):
             index = o.op03(program, index, program[index+1], invalue)
             continue
         elif opcode == '04':
-            index = o.op04(program, index, param1, param2, param3)
+            index = o.op04(program, index, param1)
             if program [index] != 99:
                 print('Oh shit')
             return param1
@@ -40,6 +38,6 @@ perms = it.permutations(range(5))
 
 for perm in perms:
     output = max(runamp(perm[4], runamp(perm[3], runamp(perm[2], runamp(perm[1], runamp(perm[0], 0))))), output)
-#output = max(runamp(0, runamp(1, runamp(2, runamp(3, runamp(4, 0))))), output)
+
 print(output)
 

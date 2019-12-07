@@ -12,7 +12,7 @@ def op03(program, index, param1, input):
     return index + 2
 
 
-def op04(program, index, param1, param2, param3):
+def op04(program, index, param1):
     print('OUTPUT:', param1)
     return index + 2
 
