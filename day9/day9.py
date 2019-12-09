@@ -1,13 +1,12 @@
 import opcodes as o
 import itertools as it
 
-def runamp (invalue):
+def runcomp (invalue):
     with open('input') as f:
         program = [int(x) for x in f.readline().split(',')]
     program = program + [0]*100000000
     index = 0
     relbase = 0
-    # index = o.op03(program, index, program[index+1], phase)
 
     while program[index] != 99:
         instruction = str(program[index]).zfill(5)
@@ -45,5 +44,5 @@ def runamp (invalue):
 
             index = getattr(o, 'op' + opcode)(program, index, param1, param2, param3)
 
-runamp(1)
-runamp(2)
+runcomp(1)
+runcomp(2)
