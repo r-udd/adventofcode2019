@@ -4,14 +4,14 @@ import threading
 from queue import Queue
 
 class Amp(threading.Thread):
- 
-    def __init__(self, inq, outq, phase, args=(), kwargs=None):      
+
+    def __init__(self, inq, outq, phase, args=(), kwargs=None):
         threading.Thread.__init__(self, args=(), kwargs=None)
         self.inq = inq
         self.outq = outq
         self.daemon = True
         self.phase = phase
- 
+
     def run (self):
         with open('input.txt') as f:
             program = [int(x) for x in f.readline().split(',')]
@@ -47,16 +47,14 @@ output = -9999999
 perms = it.permutations(range(5,10))
 
 for perm in perms:
-    queues = []
-    for i in range(5):
-        queues.append(Queue())
+
     amps = []
-    for i in range(5):
-        amps.append(Amp(queues[i],queues[(i+1) % 5],perm[i]))
+    queues = [Queue() for q in range(5)]
+    amps = [Amp(queues[i], queues[(i+1) % 5], perm[i]) for i in range(5)]
     for amp in amps:
         amp.start()
     queues[0].put(0)
-    
+
     amps[4].join()
     output = max(queues[0].get(), output)
 print(output)
