@@ -48,7 +48,6 @@ perms = it.permutations(range(5,10))
 
 for perm in perms:
 
-    amps = []
     queues = [Queue() for q in range(5)]
     amps = [Amp(queues[i], queues[(i+1) % 5], perm[i]) for i in range(5)]
     for amp in amps:
