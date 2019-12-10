@@ -1,10 +1,12 @@
 import opcodes as o
 import itertools as it
+import collections
 
 def runcomp (invalue):
+    program = collections.defaultdict(int)
     with open('input') as f:
-        program = [int(x) for x in f.readline().split(',')]
-    program = program + [0]*100000000
+        for i, x in enumerate(f.readline().split(',')):
+            program[i] = int(x)
     index = 0
     relbase = 0
 
