@@ -18,33 +18,25 @@ def runcomp (invalue):
         mode2 = int(instruction[-4])
         mode3 = int(instruction[-5])
         if mode1 == 0:
-            param1 = program[program[index+1]]
+            addr1 = program[index+1]
         elif mode1 == 1:
-            param1 = program[index+1]
+            addr1 = index+1
         elif mode1 == 2:
-            param1 = program[program[index+1] + relbase]
+            addr1 = program[index+1] + relbase
+        if mode2 == 0:
+            param2 = program[index+2]
+        elif mode2 == 1:
+            param2 = index+2
+        elif mode2 == 2:
+            param2 = program[index+2] + relbase
+        if mode3 == 0:
+            param3 = program[index+3]
+        elif mode3 == 1:
+            print('NOPE')
+        elif mode3 == 2:
+            param3 = program[index+3] + relbase
 
-        if opcode == '03':
-            index = o.op03(program, index, program[index+1], mode1, relbase, invalue)
-        elif opcode == '04':
-            index = o.op04(program, index, param1)
-        elif opcode == '09':
-            index, relbase = o.op09(program, index, param1, relbase)
-        else:
-            if mode2 == 0:
-                param2 = program[program[index+2]]
-            elif mode2 == 1:
-                param2 = program[index+2]
-            elif mode2 == 2:
-                param2 = program[program[index+2] + relbase]
-            if mode3 == 0:
-                param3 = program[index+3]
-            elif mode3 == 1:
-                print('NOPE')
-            elif mode3 == 2:
-                param3 = program[index+3] + relbase
-
-            index = getattr(o, 'op' + opcode)(program, index, param1, param2, param3)
+        index, relbase = getattr(o, 'op' + opcode)(program, index, invalue, addr1, param2, param3, relbase)
 
 runcomp(1)
 runcomp(2)

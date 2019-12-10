@@ -1,51 +1,48 @@
-def op01 (program, index, param1, param2, param3):
-    program[param3] = param1 + param2
-    return index + 4
+def op01 (program, index, input, addr1, addr2, addr3, relbase):
+    program[addr3] = program[addr1] + program[addr2]
+    return index + 4, relbase
 
 
-def op02(program, index, param1, param2, param3):
-    program[param3] = param1 * param2
-    return index + 4
+def op02(program, index, input, addr1, addr2, addr3, relbase):
+    program[addr3] = program[addr1] * program[addr2]
+    return index + 4, relbase
 
-def op03(program, index, param1, mode, relbase, input):
-    if mode == 2:
-        program[param1+relbase] = input
-    else:
-        program[param1] = input
-    return index + 2
+def op03(program, index, input, addr1, addr2, addr3, relbase):
+    program[addr1] = input
+    return index + 2, relbase
 
 
-def op04(program, index, param1):
-    print('OUTPUT:', param1)
-    return index + 2
+def op04(program, index, input, addr1, addr2, addr3, relbase):
+    print('OUTPUT:', program[addr1])
+    return index + 2, relbase
 
 
-def op05(program, index, param1, param2, param3):
+def op05(program, index, input, addr1, addr2, addr3, relbase):
     'Jump if true'
-    if param1 != 0:
-        return param2
-    return index + 3
+    if program[addr1] != 0:
+        return program[addr2], relbase
+    return index + 3, relbase
 
 
-def op06(program, index, param1, param2, param3):
+def op06(program, index, input, addr1, addr2, addr3, relbase):
     'Jump if false'
-    if param1 == 0:
-        return param2
-    return index + 3
+    if program[addr1] == 0:
+        return program[addr2], relbase
+    return index + 3, relbase
 
 
-def op07(program, index, param1, param2, param3):
+def op07(program, index, input, addr1, addr2, addr3, relbase):
     'Less than'
-    program[param3] = int(param1 < param2)
-    return index + 4
+    program[addr3] = int(program[addr1] < program[addr2])
+    return index + 4, relbase
 
 
-def op08(program, index, param1, param2, param3):
-    'Output'
-    program[param3] = int(param1 == param2)
-    return index + 4
+def op08(program, index, input, addr1, addr2, addr3, relbase):
+    'Equals'
+    program[addr3] = int(program[addr1] == program[addr2])
+    return index + 4, relbase
 
 
-def op09(program, index, param1, relbase):
+def op09(program, index, input, addr1, addr2, addr3, relbase):
     'Adjust relative base'
-    return index + 2, relbase + param1
+    return index + 2, relbase + program[addr1]
