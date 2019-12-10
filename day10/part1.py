@@ -51,8 +51,8 @@ for y in range(ymax):
                 if ast.isast:
                     ast.blocked = False
         # print('count', count, x, y)
-        # if count > maxfound:
-        #     print('new max', x, y)
+        if count > maxfound:
+            print('new max', x, y)
         maxfound = max(count, maxfound)
 
 print(maxfound-1)
