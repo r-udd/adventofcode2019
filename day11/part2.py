@@ -43,9 +43,6 @@ while 1:
         maxy = max(pos[1], maxy)
     except q.Empty as err:
         break
-print(minx, maxx)
-print(miny, maxy)
-print(len(paint))
 
 for y in range(miny,maxy+1):
     for x in range(minx, maxx+1):
