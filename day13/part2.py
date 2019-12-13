@@ -48,9 +48,8 @@ ballx = 0
 paddlex = 0
 score = 0
 while True:
-    try:
-        x = outq.get(timeout=0.001)
-    except q.Empty as err:
+    x = outq.get()
+    if x == 'i':
         # clear() #Remove comment here and raise timeout above to visualize
         # printmap(m)
         print('Score', score, 'Blocks remaining', blocksrem)

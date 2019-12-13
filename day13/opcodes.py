@@ -1,18 +1,24 @@
-def op01 (program, index, inq, outq, addrs, relbase):
+def op01(program, index, inq, outq, addrs, relbase):
+    'Add'
     program[addrs[2]] = program[addrs[0]] + program[addrs[1]]
     return index + 4, relbase
 
 
 def op02(program, index, inq, outq, addrs, relbase):
+    'Multiply'
     program[addrs[2]] = program[addrs[0]] * program[addrs[1]]
     return index + 4, relbase
 
+
 def op03(program, index, inq, outq, addrs, relbase):
+    'Get input'
+    outq.put('i')
     program[addrs[0]] = inq.get()
     return index + 2, relbase
 
 
 def op04(program, index, inq, outq, addrs, relbase):
+    'Put output'
     outq.put(program[addrs[0]])
     return index + 2, relbase
 
