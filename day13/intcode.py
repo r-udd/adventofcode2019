@@ -36,3 +36,4 @@ class Intcode(threading.Thread):
                 addrs.append(addr)
 
             index, relbase = getattr(o, 'op' + opcode)(program, index, self.inq, self.outq, addrs, relbase)
+        self.outq.put('q')
