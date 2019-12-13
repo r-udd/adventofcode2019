@@ -4,16 +4,19 @@ import threading
 
 class Intcode(threading.Thread):
 
-    def __init__(self, inq, outq, args=(), kwargs=None):
+    def __init__(self, inq, outq, mem0=-1, args=(), kwargs=None):
         threading.Thread.__init__(self, args=(), kwargs=None)
         self.inq = inq
         self.outq = outq
-        
+        self.mem0 = mem0
+
     def run (self):
         program = collections.defaultdict(int)
         with open('input.txt') as f:
             for i, x in enumerate(f.readline().split(',')):
                 program[i] = int(x)
+        if self.mem0 != -1:
+            program[0] = self.mem0
         index = 0
         relbase = 0
 
@@ -33,4 +36,3 @@ class Intcode(threading.Thread):
                 addrs.append(addr)
 
             index, relbase = getattr(o, 'op' + opcode)(program, index, self.inq, self.outq, addrs, relbase)
-
