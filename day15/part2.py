@@ -61,17 +61,17 @@ y = 0
 shipmap[(x,y)] = '.'
 inp = 'start'
 count = 0
+dirs = [(0,-1), (0,1), (-1,0), (1,0)]
 while inp != 'p':
     count += 1
-    if count % 1000 == 0:
-        clear()
-        printmap(shipmap, x, y, minx, maxx, miny, maxy)
-        print(x, y)
+    # if count % 1000 == 0:
+    #     clear()
+    #     printmap(shipmap, x, y, minx, maxx, miny, maxy)
+    #     print(x, y)
     #inp = readchar()
     if outq.get() != 'i':
         print('Something is wrong')
     
-    dirs = [(0,-1), (0,1), (-1,0), (1,0)]
     for i, dir in enumerate(dirs, start=1):
         nextx = x + dir[0]
         nexty = y + dir[1]
@@ -98,7 +98,6 @@ while inp != 'p':
             else:
                 printmap(shipmap, x, y, minx, maxx, miny, maxy)
                 print(x,y)
-                lookahead(shipmap,x,y,(-1,0))
                 break
 
 
@@ -120,5 +119,25 @@ while inp != 'p':
     x = nextx
     y = nexty
 
-#print(shipmap)
+a1 = any(x == '.' for x in shipmap.values())
+a2 = any(x == 'O' for x in shipmap.values())
+a3 = any(x == 'R' for x in shipmap.values())
+
+count = 0
+while any(x == '.' for x in shipmap.values()):
+    todo = set()
+    for pos, tile in shipmap.items():
+        if tile == 'O':
+            for d in dirs:
+                newpos = (pos[0] + d[0], pos[1] + d[1])
+                if shipmap[newpos] == '.':
+                    todo.add(newpos)
+
+    for p in todo:
+        shipmap[p] = 'O'
+    count += 1
+    #printmap(shipmap, -999, -999, minx, maxx, miny, maxy)
+            
+
+print(count)
 
