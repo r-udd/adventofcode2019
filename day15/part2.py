@@ -32,9 +32,9 @@ def lookahead (map, posx, posy, dir):
             elif tile == '.':
                 visited.add((x,y))
                 todo.append(testpos)
-                
+
     return False
-            
+
 
 
 def printmap(map, posx, posy, minx, maxx, miny, maxy):
@@ -71,7 +71,7 @@ while inp != 'p':
     #inp = readchar()
     if outq.get() != 'i':
         print('Something is wrong')
-    
+
     for i, dir in enumerate(dirs, start=1):
         nextx = x + dir[0]
         nexty = y + dir[1]
@@ -137,7 +137,5 @@ while any(x == '.' for x in shipmap.values()):
         shipmap[p] = 'O'
     count += 1
     #printmap(shipmap, -999, -999, minx, maxx, miny, maxy)
-            
 
 print(count)
-

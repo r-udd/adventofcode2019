@@ -9,6 +9,7 @@ class Intcode(threading.Thread):
         self.inq = inq
         self.outq = outq
         self.mem0 = mem0
+        self.daemon = True
 
     def run (self):
         program = collections.defaultdict(int)
