@@ -12,7 +12,7 @@ def op02(program, index, inq, outq, addrs, relbase):
 
 def op03(program, index, inq, outq, addrs, relbase):
     'Get input'
-    outq.put('i')
+    #outq.put('i')
     program[addrs[0]] = inq.get()
     return index + 2, relbase
 

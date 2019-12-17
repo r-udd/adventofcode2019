@@ -1,4 +1,4 @@
-def phasegen (no):
+def patterngen (no):
     base = [0,1,0,-1]
     basei = 0
     while True:
@@ -14,19 +14,18 @@ test4 = '69317163492948606335995924319873'
 inp = inp
 out = [int(x) for x in inp]
 for phase in range(100):
-    inp = ''.join(map(str, out))
+    inp = out
     #print(inp)
     out = []
     for i in range(1, len(inp) + 1):
-        gen = phasegen(i)
+        gen = patterngen(i)
         #Skip first
         next(gen)
         summa = 0
-        for pos, val in enumerate(inp):
-            vali = int(val)
-            summa += next(gen) * vali
+        for val, mult in zip(inp, gen):
+            summa += mult * val
         #print(summa)
-        out.append(str(summa)[-1])
+        out.append(abs(summa) % 10)
 
-print(''.join(map(str, out)))
+#print(''.join(map(str, out)))
 print(''.join(map(str, out))[:8])

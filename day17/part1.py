@@ -58,7 +58,6 @@ y = 0
 maxx, maxy, robot, dir = createmap(shipmap, outq)
 clear()
 printmap(shipmap, robot, maxx, maxy)
-inp = 'start'
 summa = 0
 dirs = [(0,-1), (0,1), (-1,0), (1,0)]
 it = list(shipmap.items())
@@ -71,6 +70,4 @@ for pos, tile in it:
                 break
         else:
             summa += pos[0] * pos[1]
-print(summa)    
-
-
+print(summa)
