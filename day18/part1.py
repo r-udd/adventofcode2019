@@ -57,7 +57,7 @@ cave = defaultdict(lambda: '#')
 keys = {}
 doors = {}
 player = ()
-with open('test4.txt') as f:
+with open('input.txt') as f:
     maxx = 0
     maxy = 0
     for y, l in enumerate(f):
@@ -81,11 +81,13 @@ minsteps = 100000
 possibilities = [{'player': player, 'keys': keys, 'doors': doors, 'steps': 0}]
 possindex = 0
 while possindex < len(possibilities):
-    print('possindex', possindex, possibilities[possindex]['steps'])
+    #print('possindex', possindex, possibilities[possindex]['steps'])
 
     # printcave(cave, possibilities[possindex]['player'],
     #           possibilities[possindex]['keys'], possibilities[possindex]['doors'], maxx, maxy)
-
+    if possibilities[possindex]['steps'] > minsteps:
+        possindex += 1
+        continue
     possiblekeys = findnextkey(
         cave, possibilities[possindex], minsteps - possibilities[possindex]['steps'])
     if len(possiblekeys) == 0:
@@ -118,8 +120,10 @@ while possindex < len(possibilities):
             break
     if len(possibilities[possindex]['keys']) == 0:
         # No keys left, done.
+        prevmin = minsteps
         minsteps = min(minsteps, possibilities[possindex]['steps'])
         possindex += 1
-        print('minsteps', minsteps)
+        if prevmin != minsteps:
+            print('minsteps', minsteps, 'index', possindex)
 
 print(minsteps)
