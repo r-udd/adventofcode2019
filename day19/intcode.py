@@ -12,29 +12,31 @@ class Intcode(threading.Thread):
         self.daemon = True
 
     def run (self):
-        program = collections.defaultdict(int)
+        origprogram = collections.defaultdict(int)
         with open('input.txt') as f:
             for i, x in enumerate(f.readline().split(',')):
-                program[i] = int(x)
+                origprogram[i] = int(x)
         if self.mem0 != -1:
-            program[0] = self.mem0
-        index = 0
-        relbase = 0
+            origprogram[0] = self.mem0
+        while True:
+            program=origprogram.copy()
+            index = 0
+            relbase = 0
 
-        while program[index] != 99:
-            instruction = str(program[index]).zfill(5)
+            while program[index] != 99:
+                instruction = str(program[index]).zfill(5)
 
-            opcode = instruction [-2:]
-            addrs = []
-            for i in range(1, 4):
-                mode = int(instruction[-2-i])
-                if mode == 0:
-                    addr = program[index + i]
-                elif mode == 1:
-                    addr = index + i
-                elif mode == 2:
-                    addr = program[index + i] + relbase
-                addrs.append(addr)
+                opcode = instruction [-2:]
+                addrs = []
+                for i in range(1, 4):
+                    mode = int(instruction[-2-i])
+                    if mode == 0:
+                        addr = program[index + i]
+                    elif mode == 1:
+                        addr = index + i
+                    elif mode == 2:
+                        addr = program[index + i] + relbase
+                    addrs.append(addr)
 
-            index, relbase = getattr(o, 'op' + opcode)(program, index, self.inq, self.outq, addrs, relbase)
-        self.outq.put('q')
+                index, relbase = getattr(o, 'op' + opcode)(program, index, self.inq, self.outq, addrs, relbase)
+        #self.outq.put('q')

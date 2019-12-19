@@ -1,8 +1,6 @@
 from collections import defaultdict
-from os import system, name
 import queue as q
 import intcode as comp
-from readchar import readchar
 
 def printmap(map, maxx, maxy):
     for x in range(maxy):
@@ -19,14 +17,13 @@ outq = q.Queue()
 
 shipmap = defaultdict(lambda : '.')
 count = 0
+c = comp.Intcode(inq, outq)
+c.start()
 for y in range(50):
     for x in range(50):
-        c = comp.Intcode(inq, outq)
-        c.start()
         inq.put(x)
         inq.put(y)
         tile = outq.get()
-        _ = outq.get()
         if tile == 1:
             shipmap[(x,y)] = '#'
             count += 1
