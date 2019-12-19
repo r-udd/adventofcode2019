@@ -26,8 +26,6 @@ def printcave(cave, player, keys, doors, maxx, maxy):
                 print(cave[(x, y)], end='')
         print()
 
-precomp = {}
-
 def calcdist(cave, start, target, doors):
     todo = [(start, 0, [])]
     visited = set()
@@ -41,17 +39,28 @@ def calcdist(cave, start, target, doors):
                 continue
             elif newpos in visited:
                 continue
+            elif newpos == target:
+                return steps + 1, keysneeded
+            elif newpos in keys:
+                keysneeded.append(keys[newpos])
+                todo.append((newpos, steps + 1, keysneeded.copy()))
             elif newpos in doors:
                 keysneeded.append(doors[newpos].lower())
                 todo.append((newpos, steps + 1, keysneeded.copy()))
-            elif newpos == target:
-                return steps + 1, keysneeded
             elif cave[newpos] == '.':
                 todo.append((newpos, steps + 1, keysneeded.copy()))
     print('WHY')
 
-def getallpossibilities(mem, start, keys, currkeys, step, minstep):
+forced = {'m': 'd', 'c': 'k', 's': 'w', 'w': 'a', 'l': 'y', 'j': 'q', 'q': 'b', 'g': 'v', 'v': 'h', 'i': 'x', 'x': 'u'}
+
+def getallpossibilities(mem, start, keys, currkeys, step, minstep, keyposs):
     possible = {}
+    startletter = ''
+    if start in keys:
+        startletter = keys[start]
+    if startletter in forced:
+        targetletter = forced[startletter]
+        possible[keyposs[targetletter]] = targetletter
     for pos, letter in keys.items():
         if letter not in currkeys:
             neededstep, neededkeys = mem[(start, pos)]
@@ -69,9 +78,10 @@ def getallpossibilities(mem, start, keys, currkeys, step, minstep):
 
 cave = defaultdict(lambda: '#')
 keys = {}
+keyposs = {}
 doors = {}
 player = ()
-with open('input.txt') as f:
+with open('processedman2.txt') as f:
     maxx = 0
     maxy = 0
     for y, l in enumerate(f):
@@ -82,10 +92,12 @@ with open('input.txt') as f:
                 continue
             elif char == '@':
                 player = (x, y)
+                keyposs[char] = (x,y)
             elif char.isupper():
                 doors[(x, y)] = char
             elif char.islower():
                 keys[(x, y)] = char
+                keyposs[char] = (x,y)
             cave[(x, y)] = '.'
         maxy = max(y, maxy)
 
@@ -103,11 +115,11 @@ for i in range(len(keylist)):
         steps, keysneeded = calcdist(cave, keylist[i], keylist[j], doors)
         mem[(keylist[i], keylist[j])] = [steps, keysneeded]
         mem[(keylist[j], keylist[i])] = [steps, keysneeded]
-
+        
 currkeys = set()
 workq = []
-heappush(workq, [[0, 0], 0, player, currkeys])
-minstep = 4200
+heappush(workq, [[0], 0, player, currkeys])
+minstep = 10000
 print('Start going through the possible paths')
 while workq:
     _, step, start, currkeys = heappop(workq)
@@ -121,11 +133,13 @@ while workq:
             print('Antalet steg', step, 'remaining heap', len(workq))
         else:
             print('steg', step)
-    possibilities = getallpossibilities(mem, start, keys, currkeys, step, minstep)
+    possibilities = getallpossibilities(mem, start, keys, currkeys, step, minstep, keyposs)
     for p,letter in possibilities.items():
         c = currkeys.copy()
         c.add(letter)
         nextstep = step + mem[(start, p)][0]
         if nextstep < minstep:
-            heappush(workq, [[-len(currkeys), nextstep], nextstep, p, c])
+            heappush(workq, [[-nextstep], nextstep, p, c])
 print(minstep)
+
+#lägre än 4034
