@@ -44,8 +44,9 @@ def calcdist(cave, mem, start, keys, doors):
                 todo.append((newpos, steps + 1, keysneeded.copy()))
             elif newpos in keys:
                 mem[(start,newpos)] = [steps + 1, keys[newpos], keysneeded]
-                keysneeded.append(keys[newpos])
-                todo.append((newpos, steps + 1, keysneeded.copy()))
+                c = keysneeded.copy()
+                c.append(keys[newpos])
+                todo.append((newpos, steps + 1, c))
             elif cave[newpos] == '.':
                 todo.append((newpos, steps + 1, keysneeded.copy()))
 
@@ -60,18 +61,18 @@ def getallpossibilities(mem, start, keys, currkeys, step, minstep, keyposs):
     #     targetletter = forced[startletter]
     #     possible[keyposs[targetletter]] = targetletter
     for pos, letter in keys.items():
-        if letter not in currkeys:
-            if (start, pos) in mem:
-                neededstep, letter, neededkeys = mem[(start, pos)]
-                for nk in neededkeys:
-                    if nk not in currkeys:
-                        break
-                else:
-                    possible[pos] = letter
-                # else:
-                #     print('Too large')
+        #if letter not in currkeys:
+        if (start, pos) in mem:
+            neededstep, letter, neededkeys = mem[(start, pos)]
+            for nk in neededkeys:
+                if nk not in currkeys:
+                    break
+            else:
+                possible[pos] = letter
+            # else:
+            #     print('Too large')
     return possible
-    
+
 
 
 cave = defaultdict(lambda: '#')
@@ -79,7 +80,7 @@ keys = {}
 keyposs = {}
 doors = {}
 player = ()
-with open('processedman2.txt') as f:
+with open('test2.txt') as f:
     maxx = 0
     maxy = 0
     for y, l in enumerate(f):
@@ -101,22 +102,26 @@ with open('processedman2.txt') as f:
 
 #printcave(cave, player, keys, doors, maxx, maxy)
 mem = {}
-for pos in keys.keys():
-    calcdist(cave, mem, player, keys, doors)
+# for pos in keys.keys():
+calcdist(cave, mem, player, keys, doors)
 
 keylist = list(keys.keys())
 for i in range(len(keylist)):
     calcdist(cave, mem, keylist[i], keys, doors)
 print(len(mem))
-currkeys = set()
+currkeys = ""
 bestkey = {}
-bestkey [''] = 0
+bestkey[('', player)] = 0
 workq = []
 heappush(workq, [[0], 0, player, currkeys])
 minstep = 10000
 print('Start going through the possible paths')
 while workq:
     _, step, start, currkeys = heappop(workq)
+    if start in keys:
+        letter = keys[start]
+    else:
+        letter = '@'
     # print(len(currkeys), len(keys))
     # input('STOP')
     if step >= minstep:
@@ -127,21 +132,28 @@ while workq:
             print('Antalet steg', step, 'remaining heap', len(workq))
         else:
             print('steg', step)
+        continue
+    elif len(keys) < len(currkeys):
+        print('NOES')
     possibilities = getallpossibilities(mem, start, keys, currkeys, step, minstep, keyposs)
-    for p,letter in possibilities.items():
-        lc = list(currkeys)
-        lc.append(letter)
-        lc.sort()
-        ls = ''.join(lc)
+    for p, letter in possibilities.items():
+        if letter not in currkeys:
+            c = currkeys + letter
+            c = ''.join(sorted(c))
+        else:
+            c = currkeys
         nextstep = step + mem[(start, p)][0]
-        if ls not in bestkey or bestkey[ls] > nextstep:
-            bestkey[ls] = nextstep
-            if nextstep < minstep:
-                c = currkeys.copy()
-                c.add(letter)
-                heappush(workq, [[-len(c)], nextstep, p, c])
-            
-print(minstep)
+        if (c, p) not in bestkey:
+            bestkey[(c, p)] = nextstep
+            heappush(workq, [[nextstep], nextstep, p, c])
+        else:
+            # if bestkey[ls] > nextstep:
+            #     bestkey[ls] = nextstep
+            if bestkey[(c, p)] < nextstep:
+                bestkey[(c, p)] = nextstep
+                heappush(workq, [[nextstep], nextstep, p, c])
 
+print(minstep)
+#Bestkey behöver också ta hänsyn till var man står. Samma nycklar med färre steg kanske genererar längre väg efteråt
 #3962
 #1844
