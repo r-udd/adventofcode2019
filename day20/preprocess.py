@@ -1,7 +1,7 @@
 from collections import defaultdict
 
 def printcave(cave, portals, maxx, maxy):
-    with open('processed.txt', mode='w') as f:
+    with open('test2processed.txt', mode='w') as f:
         for y in range(maxy+1):
             for x in range(maxx+1):
                 pos = (x, y)
@@ -13,7 +13,7 @@ def printcave(cave, portals, maxx, maxy):
 
 cave = defaultdict(lambda: '.')
 portals = {}
-with open('input.txt') as f:
+with open('test2.txt') as f:
     maxx = 0
     maxy = 0
     for y, l in enumerate(f):
