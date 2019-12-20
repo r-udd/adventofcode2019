@@ -143,4 +143,5 @@ while workq:
             
 print(minstep)
 
-#lägre än 4034
+#3962
+#1844
