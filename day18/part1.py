@@ -26,7 +26,7 @@ def printcave(cave, player, keys, doors, maxx, maxy):
                 print(cave[(x, y)], end='')
         print()
 
-def calcdist(cave, start, target, doors):
+def calcdist(cave, mem, start, keys, doors):
     todo = [(start, 0, [])]
     visited = set()
     dirs = [(0, -1), (0, 1), (-1, 0), (1, 0)]
@@ -39,36 +39,34 @@ def calcdist(cave, start, target, doors):
                 continue
             elif newpos in visited:
                 continue
-            elif newpos == target:
-                return steps + 1, keysneeded
-            elif newpos in keys:
-                keysneeded.append(keys[newpos])
-                todo.append((newpos, steps + 1, keysneeded.copy()))
             elif newpos in doors:
                 keysneeded.append(doors[newpos].lower())
                 todo.append((newpos, steps + 1, keysneeded.copy()))
+            elif newpos in keys:
+                mem[(start,newpos)] = [steps + 1, keys[newpos], keysneeded]
+                keysneeded.append(keys[newpos])
+                todo.append((newpos, steps + 1, keysneeded.copy()))
             elif cave[newpos] == '.':
                 todo.append((newpos, steps + 1, keysneeded.copy()))
-    print('WHY')
 
 forced = {'m': 'd', 'c': 'k', 's': 'w', 'w': 'a', 'l': 'y', 'j': 'q', 'q': 'b', 'g': 'v', 'v': 'h', 'i': 'x', 'x': 'u'}
 
 def getallpossibilities(mem, start, keys, currkeys, step, minstep, keyposs):
     possible = {}
-    startletter = ''
-    if start in keys:
-        startletter = keys[start]
-    if startletter in forced:
-        targetletter = forced[startletter]
-        possible[keyposs[targetletter]] = targetletter
+    # startletter = ''
+    # if start in keys:
+    #     startletter = keys[start]
+    # if startletter in forced:
+    #     targetletter = forced[startletter]
+    #     possible[keyposs[targetletter]] = targetletter
     for pos, letter in keys.items():
         if letter not in currkeys:
-            neededstep, neededkeys = mem[(start, pos)]
-            for nk in neededkeys:
-                if nk not in currkeys:
-                    break
-            else:
-                if neededstep + step < minstep:
+            if (start, pos) in mem:
+                neededstep, letter, neededkeys = mem[(start, pos)]
+                for nk in neededkeys:
+                    if nk not in currkeys:
+                        break
+                else:
                     possible[pos] = letter
                 # else:
                 #     print('Too large')
@@ -101,22 +99,18 @@ with open('processedman2.txt') as f:
             cave[(x, y)] = '.'
         maxy = max(y, maxy)
 
-printcave(cave, player, keys, doors, maxx, maxy)
-precalc = {}
+#printcave(cave, player, keys, doors, maxx, maxy)
 mem = {}
 for pos in keys.keys():
-    steps, keysneeded = calcdist(cave, player, pos, doors)
-    mem[(player,pos)] = [steps, keysneeded]
-    mem[(player,pos)] = [steps, keysneeded]
+    calcdist(cave, mem, player, keys, doors)
 
 keylist = list(keys.keys())
 for i in range(len(keylist)):
-    for j in range(i+1, len(keylist)):
-        steps, keysneeded = calcdist(cave, keylist[i], keylist[j], doors)
-        mem[(keylist[i], keylist[j])] = [steps, keysneeded]
-        mem[(keylist[j], keylist[i])] = [steps, keysneeded]
-        
+    calcdist(cave, mem, keylist[i], keys, doors)
+print(len(mem))
 currkeys = set()
+bestkey = {}
+bestkey [''] = 0
 workq = []
 heappush(workq, [[0], 0, player, currkeys])
 minstep = 10000
@@ -135,11 +129,18 @@ while workq:
             print('steg', step)
     possibilities = getallpossibilities(mem, start, keys, currkeys, step, minstep, keyposs)
     for p,letter in possibilities.items():
-        c = currkeys.copy()
-        c.add(letter)
+        lc = list(currkeys)
+        lc.append(letter)
+        lc.sort()
+        ls = ''.join(lc)
         nextstep = step + mem[(start, p)][0]
-        if nextstep < minstep:
-            heappush(workq, [[-nextstep], nextstep, p, c])
+        if ls not in bestkey or bestkey[ls] > nextstep:
+            bestkey[ls] = nextstep
+            if nextstep < minstep:
+                c = currkeys.copy()
+                c.add(letter)
+                heappush(workq, [[-len(c)], nextstep, p, c])
+            
 print(minstep)
 
 #lägre än 4034
