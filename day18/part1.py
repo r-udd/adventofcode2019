@@ -113,11 +113,11 @@ currkeys = ""
 bestkey = {}
 bestkey[('', player)] = 0
 workq = []
-heappush(workq, [[0], 0, player, currkeys])
+heappush(workq, [[0], 0, player, currkeys, ''])
 minstep = 10000
 print('Start going through the possible paths')
 while workq:
-    _, step, start, currkeys = heappop(workq)
+    _, step, start, currkeys, o = heappop(workq)
     if start in keys:
         letter = keys[start]
     else:
@@ -130,6 +130,7 @@ while workq:
         if step < minstep:
             minstep = step
             print('Antalet steg', step, 'remaining heap', len(workq))
+            print(o)
         else:
             print('steg', step)
         continue
@@ -142,16 +143,17 @@ while workq:
             c = ''.join(sorted(c))
         else:
             c = currkeys
+        onext = o+letter
         nextstep = step + mem[(start, p)][0]
         if (c, p) not in bestkey:
             bestkey[(c, p)] = nextstep
-            heappush(workq, [[nextstep], nextstep, p, c])
+            heappush(workq, [[nextstep], nextstep, p, c, onext])
         else:
             # if bestkey[ls] > nextstep:
             #     bestkey[ls] = nextstep
             if bestkey[(c, p)] < nextstep:
                 bestkey[(c, p)] = nextstep
-                heappush(workq, [[nextstep], nextstep, p, c])
+                heappush(workq, [[nextstep], nextstep, p, c, onext])
 
 print(minstep)
 #Bestkey behöver också ta hänsyn till var man står. Samma nycklar med färre steg kanske genererar längre väg efteråt
