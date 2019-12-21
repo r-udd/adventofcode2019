@@ -1,16 +1,5 @@
 from collections import defaultdict
-from os import system, name
 from heapq import *
-
-# define our clear function
-def clear():
-    # for windows
-    if name == 'nt':
-        _ = system('cls')
-    # for mac and linux(here, os.name is 'posix')
-    else:
-        _ = system('clear')
-
 
 def printcave(cave, player, keys, doors, maxx, maxy):
     for y in range(maxy+1):
@@ -50,30 +39,18 @@ def calcdist(cave, mem, start, keys, doors):
             elif cave[newpos] == '.':
                 todo.append((newpos, steps + 1, keysneeded.copy()))
 
-forced = {'m': 'd', 'c': 'k', 's': 'w', 'w': 'a', 'l': 'y', 'j': 'q', 'q': 'b', 'g': 'v', 'v': 'h', 'i': 'x', 'x': 'u'}
-
 def getallpossibilities(mem, start, keys, currkeys, step, minstep, keyposs):
     possible = {}
-    # startletter = ''
-    # if start in keys:
-    #     startletter = keys[start]
-    # if startletter in forced:
-    #     targetletter = forced[startletter]
-    #     possible[keyposs[targetletter]] = targetletter
     for pos, letter in keys.items():
         #if letter not in currkeys:
         if (start, pos) in mem:
-            neededstep, letter, neededkeys = mem[(start, pos)]
+            _, letter, neededkeys = mem[(start, pos)]
             for nk in neededkeys:
                 if nk not in currkeys:
                     break
             else:
                 possible[pos] = letter
-            # else:
-            #     print('Too large')
     return possible
-
-
 
 cave = defaultdict(lambda: '#')
 keys = {}
@@ -102,7 +79,6 @@ with open('input.txt') as f:
 
 #printcave(cave, player, keys, doors, maxx, maxy)
 mem = {}
-# for pos in keys.keys():
 calcdist(cave, mem, player, keys, doors)
 
 keylist = list(keys.keys())
