@@ -9,7 +9,7 @@ outq = q.Queue()
 c = comp.Intcode(inq, outq)
 c.start()
 
-with open('instructions1.txt') as f:
+with open('instructions2.txt') as f:
     for l in f:
         for char in l:
             inq.put(ord(char))
