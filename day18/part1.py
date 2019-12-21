@@ -80,7 +80,7 @@ keys = {}
 keyposs = {}
 doors = {}
 player = ()
-with open('test2.txt') as f:
+with open('input.txt') as f:
     maxx = 0
     maxy = 0
     for y, l in enumerate(f):
@@ -151,11 +151,8 @@ while workq:
         else:
             # if bestkey[ls] > nextstep:
             #     bestkey[ls] = nextstep
-            if bestkey[(c, p)] < nextstep:
+            if bestkey[(c, p)] > nextstep:
                 bestkey[(c, p)] = nextstep
                 heappush(workq, [[nextstep], nextstep, p, c, onext])
 
 print(minstep)
-#Bestkey behöver också ta hänsyn till var man står. Samma nycklar med färre steg kanske genererar längre väg efteråt
-#3962
-#1844
