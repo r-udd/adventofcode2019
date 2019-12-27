@@ -1,44 +1,42 @@
 maxx = 4
 maxy = 4
-grid = []
+grid = ""
 with open('input.txt') as f:
     for l in f.readlines():
-        line = []
-        for char in l.strip():
-            line.append(char)
-        grid.append(line)
+        grid += l.strip()
 
-dirs = [(0,-1), (1,0), (0,1), (-1,0)]
 prevs = set()
-prevs.add(str(grid))
-print (str(grid))
+prevs.add(grid)
+dirs = [(0,-1), (1,0), (0,1), (-1,0)]
 while True:
-    newgrid = [['.' for x in range(maxx+1)] for y in range(maxy+1)]
+    line = ''
     for y in range(maxy + 1):
         for x in range(maxx + 1):
             count = 0
             for d in dirs:
                 newx = x + d[0]
                 newy = y + d[1]
+                index = newy * 5 + newx
                 if newx in range(maxx + 1) and newy in range(maxy+1):
-                    count += grid[newy][newx] == '#'
-            if grid[y][x] == '#' and count == 1:
-                newgrid[y][x] = '#'
-            elif grid[y][x] == '.' and (count == 2 or count == 1):
-                newgrid[y][x] = '#'
+                    count += grid[index] == '#'
+            if grid[y * 5 + x] == '#' and count == 1:
+                line += '#'
+            elif grid[y * 5 + x] == '.' and (count == 2 or count == 1):
+                line += '#'
             else:
-                newgrid[y][x] = '.'
+                line += '.'
+    newgrid = line
 
     grid = newgrid
-    snewgrid = str(newgrid)
-    if snewgrid in prevs:
+    if newgrid in prevs:
         break
-    prevs.add(snewgrid)
+    prevs.add(newgrid)
+
 count = 0
 biodiv = 0
 for y in range(maxy + 1):
     for x in range(maxx + 1):
-        if newgrid[y][x] == '#':
+        if newgrid[y * 5 + x] == '#':
             biodiv += pow(2,count)
         count += 1
 
