@@ -43,7 +43,7 @@ def op04(program, index, inq, outq, addrs, relbase, address):
         address = (2, address[1])
     elif address[0] == 2:
         if address[1] == 255:
-            outq[address[50]].put(o)
+            outq[50].put(o)
         else:
             outq[address[1]].put(o)
         address = (0,0)

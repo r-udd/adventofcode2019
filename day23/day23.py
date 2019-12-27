@@ -20,5 +20,23 @@ for i in range(no):
 for c in comps:
     c.start()
 
-input()
-
+prevx = -1
+prevy = -1
+while True:
+    for qi in range(no):
+        if not nics[qi].empty():
+            break
+    else:
+        while not nics[50].empty():
+            x = nics[50].get()
+            y = nics[50].get()
+            new = True
+        if new:
+            nics[0].put(x)
+            nics[0].put(y)
+            if prevx == x and prevy == y:
+                print(y)
+                break
+            prevx = x
+            prevy = y
+            new = False
