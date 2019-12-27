@@ -11,6 +11,8 @@ for i in range(no):
 for i, n in enumerate(nics):
     n.put(i)
 
+nics.append(q.Queue())
+
 comps = []
 for i in range(no):
     comps.append(comp.Intcode(i, nics))

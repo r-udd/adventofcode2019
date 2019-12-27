@@ -21,7 +21,7 @@ class Intcode(threading.Thread):
             program[0] = self.mem0
         index = 0
         relbase = 0
-        count = 0
+        address = (0, 0)
         while program[index] != 99:
             instruction = str(program[index]).zfill(5)
 
@@ -37,5 +37,5 @@ class Intcode(threading.Thread):
                     addr = program[index + i] + relbase
                 addrs.append(addr)
 
-            index, relbase, count = getattr(o, 'op' + opcode)(program, index, self.inq, self.outq, addrs, relbase, count)
+            index, relbase, address = getattr(o, 'op' + opcode)(program, index, self.inq, self.outq, addrs, relbase, address)
         #self.outq.put('q')
