@@ -37,9 +37,10 @@ decksize = 119315717514047
 n = 101741582076661
 X = 2020
 
+#from https://www.reddit.com/r/adventofcode/comments/ee0rqi/2019_day_22_solutions/fbnifwk/
 Y = revshuffle(instructions, X, decksize)
 Z = revshuffle(instructions, Y, decksize)
 A = ((Y-Z) * pow(X-Y, -1, decksize)) % decksize
 B = (Y - A * X) % decksize
-#print(A, B)
+
 print((pow(A, n, decksize)*X + (pow(A, n, decksize)-1) * pow(A-1, -1, decksize) * B) % decksize)
